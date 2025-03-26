@@ -1,0 +1,9 @@
+name: "add-detection-metadata"
+type: plugin
+version: "0.1.0"
+description: "Add detection metadata to FiftyOne samples"
+fiftyone:
+  version: ">=1.2.0"
+
+operators:
+  - add-detection-metadata
