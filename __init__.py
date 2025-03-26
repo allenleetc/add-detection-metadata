@@ -2,7 +2,6 @@ import sys
 import os
 from datetime import datetime
 import logging
-import torch
 import fiftyone as fo
 import fiftyone.operators as foo
 import fiftyone.operators.types as types
@@ -13,12 +12,6 @@ from fiftyone import ViewField as F
 
 logger = logging.getLogger("fiftyone.core.collections")
 
-
-# Set to writable working dir in teams-do pods
-TRAIN_ROOT = "/tmp/yolo/"
-MODEL_ROOT = os.path.join(TRAIN_ROOT, "models")
-DATA_ROOT = os.path.join(TRAIN_ROOT, "data")
-PROJECT_ROOT = os.path.join(TRAIN_ROOT, "projects")
 
 
 NAME = "add-detection-metadata"
@@ -98,13 +91,13 @@ class AddDetectionMetadata(foo.Operator):
         dataset.add_sample_field(f"area_rel_field", fo.FloatField)        
         dataset.add_sample_field(f"aspect_field", fo.FloatField)
         
-        view_area_rel = dataset.set_field(area_rel_field,rel_bbox_area) 
         view_area_abs = dataset.set_field(area_abs_field,abs_area)
+        view_area_rel = dataset.set_field(area_rel_field,rel_bbox_area) 
         aspect = dataset.set_field(aspect_field,rectangleness)
 
         # The .save() method will persist the computed stats to the dataset.
-        view_area_rel.save()
         view_area_abs.save()
+        view_area_rel.save()
         aspect.save()
 
         return {"status": "success", "samples_processed": len(dataset)}
