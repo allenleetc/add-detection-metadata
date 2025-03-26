@@ -16,7 +16,7 @@ logger = logging.getLogger("fiftyone.core.collections")
 
 NAME = "add-detection-metadata"
 LABEL = "Add Detection Metadata"
-ICON = "package_2"
+ICON = "crop_square"
 
 class AddDetectionMetadata(foo.Operator):
     @property
@@ -55,15 +55,25 @@ class AddDetectionMetadata(foo.Operator):
         """
         inputs = types.Object()
 
-        inputs.str(
+
+        inputs = types.Object()
+        place_selector = types.AutocompleteView()
+        ds = ctx.dataset
+        schema = ds.get_field_schema(ftype=fo.EmbeddedDocumentField,embedded_doc_type=fo.Detections)
+        fields = list(schema.keys())
+        for key in fields:
+            place_selector.add_choice(key, label=key)
+        inputs.enum(
             "det_field",
+            place_selector.values(),
             required=True,
             label="Detections field",
+            view=place_selector,
         )
-        
+          
         return types.Property(
             inputs,
-            view=types.View(label="Run inference with YOLO"),
+            view=types.View(label="Compute crop metadata"),
         )
 
     def execute(self, ctx):
