@@ -6,7 +6,6 @@ import fiftyone as fo
 import fiftyone.operators as foo
 import fiftyone.operators.types as types
 import fiftyone.core.storage as fos
-import fiftyone.utils.ultralytics as fou
 from fiftyone import ViewField as F
 
 
@@ -94,20 +93,32 @@ class AddDetectionMetadata(foo.Operator):
             box_width * im_width - box_height * im_height
         )
         
+        rel_bbox_area_sqrt = rel_bbox_area.sqrt()
+        abs_area_sqrt = abs_area.sqrt()
+        
         area_abs_field = f"{det_field}.detections.area_abs"
         area_rel_field = f"{det_field}.detections.area_rel"
+        area_abs_sqrt_field = f"{det_field}.detections.area_abs_sqrt"
+        area_rel_sqrt_field = f"{det_field}.detections.area_rel_sqrt"
         aspect_field = f"{det_field}.detections.aspect"
+
         dataset.add_sample_field(area_abs_field, fo.FloatField)
         dataset.add_sample_field(area_rel_field, fo.FloatField)        
+        dataset.add_sample_field(area_abs_sqrt_field, fo.FloatField)
+        dataset.add_sample_field(area_rel_sqrt_field, fo.FloatField)        
         dataset.add_sample_field(aspect_field, fo.FloatField)
         
         view_area_abs = dataset.set_field(area_abs_field,abs_area)
         view_area_rel = dataset.set_field(area_rel_field,rel_bbox_area) 
+        view_area_sqrt_abs = dataset.set_field(area_abs_sqrt_field,abs_area_sqrt)
+        view_area_sqrt_rel = dataset.set_field(area_rel_sqrt_field,rel_bbox_area_sqrt) 
         aspect = dataset.set_field(aspect_field,rectangleness)
 
         # The .save() method will persist the computed stats to the dataset.
         view_area_abs.save()
         view_area_rel.save()
+        view_area_sqrt_abs.save()
+        view_area_sqrt_rel.save()
         aspect.save()
 
         return {"status": "success", "samples_processed": len(dataset)}
