@@ -30,8 +30,8 @@ class AddDetectionMetadata(foo.Operator):
             label=LABEL,
             icon=ICON,  # Material UI icon, or path to custom icon
             allow_immediate_execution=True,
-            allow_delegated_execution=True,
-            default_choice_to_delegated=True,
+            allow_delegated_execution=False,
+            default_choice_to_delegated=False,
         )
 
     def resolve_placement(self, ctx):
@@ -97,9 +97,9 @@ class AddDetectionMetadata(foo.Operator):
         area_abs_field = f"{det_field}.detections.area_abs"
         area_rel_field = f"{det_field}.detections.area_rel"
         aspect_field = f"{det_field}.detections.aspect"
-        dataset.add_sample_field(f"area_abs_field", fo.FloatField)
-        dataset.add_sample_field(f"area_rel_field", fo.FloatField)        
-        dataset.add_sample_field(f"aspect_field", fo.FloatField)
+        dataset.add_sample_field(area_abs_field, fo.FloatField)
+        dataset.add_sample_field(area_rel_field, fo.FloatField)        
+        dataset.add_sample_field(aspect_field, fo.FloatField)
         
         view_area_abs = dataset.set_field(area_abs_field,abs_area)
         view_area_rel = dataset.set_field(area_rel_field,rel_bbox_area) 
