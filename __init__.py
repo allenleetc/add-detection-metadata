@@ -29,8 +29,8 @@ class AddDetectionMetadata(foo.Operator):
             label=LABEL,
             icon=ICON,  # Material UI icon, or path to custom icon
             allow_immediate_execution=True,
-            allow_delegated_execution=False,
-            default_choice_to_delegated=False,
+            allow_delegated_execution=True,
+            default_choice_to_delegated=True,
         )
 
     def resolve_placement(self, ctx):
